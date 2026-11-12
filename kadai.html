@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>課題曲リスト</title>
+<style>
+:root{
+  --bg:#f2f4f7;--surface:#fff;--ink:#1a2230;--muted:#667085;--line:#dfe3ea;
+  --accent:#3b5bdb;--on-accent:#fff;--star:#f08c00;--ok:#2f9e44;--perfect:#f5b301;--danger:#d92d20;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161d;--surface:#1b212b;--ink:#e8ecf2;--muted:#9aa4b2;--line:#2c3441;
+    --accent:#748ffc;--on-accent:#101521;--star:#ffa94d;--ok:#51cf66;--perfect:#ffd43b;--danger:#ff6b61;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12161d;--surface:#1b212b;--ink:#e8ecf2;--muted:#9aa4b2;--line:#2c3441;
+  --accent:#748ffc;--on-accent:#101521;--star:#ffa94d;--ok:#51cf66;--perfect:#ffd43b;--danger:#ff6b61;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"Hiragino Sans","Yu Gothic UI","Noto Sans JP",Meiryo,sans-serif;
+  font-size:16px;line-height:1.4;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 12px 96px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 0 8px}
+.top{display:flex;align-items:center;gap:8px}
+h1{font-size:1.15rem;margin:0;flex:1}
+.sum{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.ghost{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.search{width:100%;margin-top:8px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.chips{display:flex;gap:6px;margin-top:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.85rem}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip.star[aria-pressed="true"]{background:var(--star);border-color:var(--star);color:#1a1200}
+
+section{margin-top:16px}
+h2{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 6px;font-size:.95rem}
+h2 small{color:var(--muted);font-weight:400}
+.row{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:4px 4px 4px 6px;margin-bottom:6px}
+.row.starred{border-left:4px solid var(--star)}
+.st{flex:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:1.15rem;line-height:1}
+.st.s1{background:var(--ok);border-color:var(--ok);color:#fff;font-weight:700}
+.st.s2{background:var(--perfect);border-color:var(--perfect)}
+.main{flex:1;min-width:0;text-align:left;padding:6px 4px;min-height:44px}
+.t{display:block;overflow-wrap:anywhere}
+.d{display:block;font-size:.8rem;color:var(--muted)}
+.row.s2 .t{color:var(--muted)}
+.star{flex:none;width:44px;height:44px;font-size:1.4rem;color:var(--line)}
+.star.on{color:var(--star)}
+.empty{text-align:center;color:var(--muted);padding:48px 12px}
+
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:1.8rem;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:6}
+
+dialog{width:min(92vw,440px);border:0;border-radius:16px;padding:16px;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 10px;font-size:1.05rem}
+label{display:block;font-size:.8rem;color:var(--muted);margin:10px 0 4px}
+.in{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+textarea.in{min-height:46vh;font-size:.9rem;line-height:1.5;resize:vertical}
+.pair{display:grid;grid-template-columns:1fr 120px;gap:8px}
+.starsel{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.95rem;color:var(--ink)}
+.starsel input{width:22px;height:22px}
+.acts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.btn{flex:1;min-width:30%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn.danger{color:var(--danger)}
+.msg{min-height:1.2em;font-size:.85rem;color:var(--muted);margin-top:8px}
+@media (min-width:700px){.wrap{padding-bottom:48px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <h1>課題曲リスト</h1>
+      <span class="sum" id="sum"></span>
+      <button class="ghost" id="ioBtn">入出力</button>
+    </div>
+    <input class="search" id="q" type="search" placeholder="曲名・送り主で検索" autocomplete="off">
+    <div class="chips" id="chips">
+      <button class="chip star" data-k="star" aria-pressed="false">★のみ</button>
+      <button class="chip" data-k="all" aria-pressed="true">全て</button>
+      <button class="chip" data-k="0" aria-pressed="false">未プレイ</button>
+      <button class="chip" data-k="lt2" aria-pressed="false">未達成</button>
+      <button class="chip" data-k="1" aria-pressed="false">✔ プレイ済</button>
+      <button class="chip" data-k="2" aria-pressed="false">💯 達成</button>
+    </div>
+  </header>
+  <main id="list"></main>
+</div>
+<button class="fab" id="addBtn" aria-label="曲を追加">＋</button>
+
+<dialog id="dlg">
+  <form id="form">
+    <h3 id="dlgTitle">曲を追加</h3>
+    <label for="fFrom">送ってくれた人</label>
+    <input class="in" id="fFrom" list="senders" autocomplete="off" required>
+    <datalist id="senders"></datalist>
+    <label for="fTitle">曲名</label>
+    <input class="in" id="fTitle" autocomplete="off" required>
+    <div class="pair">
+      <div><label for="fDiff">難易度（例: MAS13.5）</label><input class="in" id="fDiff" autocomplete="off"></div>
+      <div><label for="fSt">状態</label>
+        <select class="in" id="fSt"><option value="0">未プレイ</option><option value="1">✔ プレイ済</option><option value="2">💯 達成</option></select></div>
+    </div>
+    <label class="starsel"><input type="checkbox" id="fStar"> ★ 優先する</label>
+    <div class="acts">
+      <button type="button" class="btn danger" id="delBtn">削除</button>
+      <button type="button" class="btn" id="cancelBtn">キャンセル</button>
+      <button type="submit" class="btn primary">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="ioDlg">
+  <h3>テキストで入出力</h3>
+  <textarea class="in" id="ioText" spellcheck="false" placeholder="от 名前&#10;- ★ 曲名 MAS13 ✔"></textarea>
+  <div class="msg" id="ioMsg"></div>
+  <div class="acts">
+    <button class="btn" id="copyBtn">コピー</button>
+    <button class="btn" id="addImp">追加で取り込む</button>
+    <button class="btn danger" id="repImp">置き換える</button>
+    <button class="btn primary" id="ioClose">閉じる</button>
+  </div>
+</dialog>
+
+<script>
+const KEY = 'kadai-list-v1';
+let items = [], mem = null, editing = null, lastFrom = '';
+const flt = { st: 'all', star: false, q: '' };
+const $ = id => document.getElementById(id);
+
+function load() {
+  try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch (e) {}
+  return mem || [];
+}
+function save() {
+  mem = items;
+  try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {}
+}
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function match(i) {
+  if (flt.star && !i.star) return false;
+  if (flt.st === '0' && i.st !== 0) return false;
+  if (flt.st === '1' && i.st !== 1) return false;
+  if (flt.st === '2' && i.st !== 2) return false;
+  if (flt.st === 'lt2' && i.st === 2) return false;
+  if (flt.q) {
+    const q = flt.q.toLowerCase();
+    if (!(i.title + ' ' + i.from + ' ' + i.diff).toLowerCase().includes(q)) return false;
+  }
+  return true;
+}
+
+function row(i) {
+  return `<div class="row s${i.st}${i.star ? ' starred' : ''}" data-id="${i.id}">
+    <button class="st s${i.st}" data-a="st" aria-label="状態を切り替え">${['', '✔', '💯'][i.st]}</button>
+    <button class="main" data-a="edit"><span class="t">${esc(i.title)}</span>${i.diff ? `<span class="d">${esc(i.diff)}</span>` : ''}</button>
+    <button class="star${i.star ? ' on' : ''}" data-a="star" aria-pressed="${!!i.star}" aria-label="優先">★</button>
+  </div>`;
+}
+
+function render() {
+  const groups = new Map();
+  items.forEach(i => { if (!groups.has(i.from)) groups.set(i.from, []); });
+  items.filter(match).forEach(i => groups.get(i.from).push(i));
+  let h = '';
+  for (const [name, arr] of groups) {
+    if (!arr.length) continue;
+    const all = items.filter(i => i.from === name);
+    const done = all.filter(i => i.st > 0).length;
+    const sorted = arr.slice().sort((a, b) => (+b.star) - (+a.star));
+    h += `<section><h2><span>${esc(name)}</span><small>${done}/${all.length}</small></h2>${sorted.map(row).join('')}</section>`;
+  }
+  if (!h) h = `<div class="empty">${items.length ? '条件に合う曲がありません' : '右下の＋から課題曲を追加するか、「入出力」でテキストを取り込めます'}</div>`;
+  $('list').innerHTML = h;
+  const n = [0, 0, 0]; items.forEach(i => n[i.st]++);
+  $('sum').textContent = items.length ? `未${n[0]} ✔${n[1]} 💯${n[2]}` : '';
+  $('senders').innerHTML = [...new Set(items.map(i => i.from))].map(n => `<option value="${esc(n)}">`).join('');
+}
+
+$('list').addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'), r = e.target.closest('.row');
+  if (!b || !r) return;
+  const it = items.find(i => i.id === r.dataset.id); if (!it) return;
+  if (b.dataset.a === 'st') { it.st = (it.st + 1) % 3; save(); render(); }
+  else if (b.dataset.a === 'star') { it.star = it.star ? 0 : 1; save(); render(); }
+  else openForm(it);
+});
+
+$('chips').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  if (c.dataset.k === 'star') { flt.star = !flt.star; c.setAttribute('aria-pressed', flt.star); }
+  else {
+    flt.st = c.dataset.k;
+    document.querySelectorAll('.chip:not(.star)').forEach(x => x.setAttribute('aria-pressed', x === c));
+  }
+  render();
+});
+$('q').addEventListener('input', e => { flt.q = e.target.value.trim(); render(); });
+
+function openForm(it) {
+  editing = it ? it.id : null;
+  $('dlgTitle').textContent = it ? '曲を編集' : '曲を追加';
+  $('fFrom').value = it ? it.from : lastFrom;
+  $('fTitle').value = it ? it.title : '';
+  $('fDiff').value = it ? it.diff : '';
+  $('fSt').value = it ? it.st : 0;
+  $('fStar').checked = it ? !!it.star : false;
+  $('delBtn').style.display = it ? '' : 'none';
+  $('dlg').showModal();
+  if (!it) (lastFrom ? $('fTitle') : $('fFrom')).focus();
+}
+$('addBtn').onclick = () => openForm(null);
+$('cancelBtn').onclick = () => $('dlg').close();
+$('form').addEventListener('submit', e => {
+  e.preventDefault();
+  const o = {
+    from: $('fFrom').value.trim() || '名無し', title: $('fTitle').value.trim(),
+    diff: $('fDiff').value.trim(), st: +$('fSt').value, star: $('fStar').checked ? 1 : 0
+  };
+  if (!o.title) return;
+  lastFrom = o.from;
+  if (editing) Object.assign(items.find(i => i.id === editing), o);
+  else items.push({ id: uid(), ...o });
+  save(); render(); $('dlg').close();
+});
+$('delBtn').onclick = () => {
+  if (!confirm('この曲を削除しますか？')) return;
+  items = items.filter(i => i.id !== editing); save(); render(); $('dlg').close();
+};
+
+function exportText() {
+  const g = new Map();
+  items.forEach(i => { if (!g.has(i.from)) g.set(i.from, []); g.get(i.from).push(i); });
+  return [...g].map(([n, a]) => `от ${n}\n` + a.map(i =>
+    `- ${i.star ? '★ ' : ''}${i.title}${i.diff ? ' ' + i.diff : ''}${['', ' ✔', ' 💯'][i.st]}`).join('\n')).join('\n\n');
+}
+function parse(t) {
+  const out = []; let from = '名無し';
+  for (let line of t.split(/\r?\n/)) {
+    line = line.replace(/[\uFE0E\uFE0F]/g, '').trim();
+    if (!line) continue;
+    let m = line.match(/^от\s+(.+)$/i);
+    if (m) { from = m[1].trim(); continue; }
+    m = line.match(/^[-*・]\s*(.*)$/); if (!m) continue;
+    let s = m[1].trim(), star = 0, st = 0;
+    if (/^[★☆]/.test(s)) { star = s[0] === '★' ? 1 : 0; s = s.slice(1).trim(); }
+    const e = s.match(/\s*(✔|✓|💯)$/);
+    if (e) { st = e[1] === '💯' ? 2 : 1; s = s.slice(0, e.index).trim(); }
+    let diff = '';
+    const d = s.match(/(?:^|\s)((?:Re:)?[A-Za-z]*\d+(?:\.\d+)?\+?)$/);
+    if (d) { diff = d[1]; s = s.slice(0, d.index).trim(); }
+    if (s) out.push({ id: uid(), from, title: s, diff, st, star });
+  }
+  return out;
+}
+const ioMsg = t => { $('ioMsg').textContent = t; };
+$('ioBtn').onclick = () => { $('ioText').value = exportText(); ioMsg('現在のリストを書き出しました。編集して取り込むこともできます。'); $('ioDlg').showModal(); };
+$('ioClose').onclick = () => $('ioDlg').close();
+$('copyBtn').onclick = async () => {
+  const ta = $('ioText');
+  try { await navigator.clipboard.writeText(ta.value); ioMsg('コピーしました'); }
+  catch (e) { ta.select(); try { document.execCommand('copy'); ioMsg('コピーしました'); } catch (e2) { ioMsg('コピーできませんでした。手動で選択してください'); } }
+};
+$('addImp').onclick = () => {
+  const p = parse($('ioText').value);
+  if (!p.length) return ioMsg('取り込める行が見つかりませんでした');
+  items = items.concat(p); save(); render(); ioMsg(`${p.length}件を追加しました`);
+};
+$('repImp').onclick = () => {
+  const p = parse($('ioText').value);
+  if (!p.length) return ioMsg('取り込める行が見つかりませんでした');
+  if (!confirm(`現在のリストを破棄して ${p.length}件で置き換えますか？`)) return;
+  items = p; save(); render(); ioMsg(`${p.length}件で置き換えました`);
+};
+
+items = load();
+render();
+</script>
+</body>
+</html>
